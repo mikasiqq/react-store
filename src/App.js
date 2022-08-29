@@ -1,126 +1,73 @@
+import React, { useState } from "react";
+import { Routes, Route } from 'react-router-dom'
+import { useEffect } from "react";
+import axios from "axios";
+import Drawer from "./components/Drawer";
+import Header from "./components/Header";
+import MainPage from "./pages/MainPage";
+import FavouritePage from "./pages/FavouritePage";
 
 function App() {
+  const [items, setItems] = useState ([])
+  const [cartItems, setCartItems] = useState([])
+  const [favouriteItems, setFavouriteItems] = useState([])
+  const [searchedItem, setSearchedItem] = useState('')
+  const [cartOpened, setCartOpened] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(()=> {
+    async function fetchData () {
+      const cartResponse = await axios.get('https://62fe232b41165d66bfb9305a.mockapi.io/cart')
+      const favouriteResponse = await axios.get('https://62fe232b41165d66bfb9305a.mockapi.io/favourite')
+      const itemsResponse = await axios.get('https://62fe232b41165d66bfb9305a.mockapi.io/items')
+      
+      setIsLoading(false)
+      setCartItems(cartResponse.data)
+      setFavouriteItems(favouriteResponse.data)
+      setItems(itemsResponse.data)
+    }
+    fetchData()
+  }, [])  
+
+  const addToCart = (item) => {
+    console.log(item)
+    if (cartItems.find ((obj) => Number(obj.id) === Number(item.id))) {
+      axios.delete(`https://62fe232b41165d66bfb9305a.mockapi.io/cart/${item.id}`)
+      setCartItems(prev => prev.filter(obj => Number(obj.id) !== Number(item.id)))
+    } else {
+      axios.post('https://62fe232b41165d66bfb9305a.mockapi.io/cart', item)
+      setCartItems(prev => [...prev, item])
+    }
+  }
+
+  const removeFromCart = (id) => {
+    axios.delete(`https://62fe232b41165d66bfb9305a.mockapi.io/cart/${id}`)
+    setCartItems((prev) => prev.filter(item => item.id !== id))
+  }
+
+  const addToFavourite = async (item) => {
+    try {
+      if (favouriteItems.find((favouriteItem) => Number(favouriteItem.id) === Number(item.id))) {
+        axios.delete(`https://62fe232b41165d66bfb9305a.mockapi.io/favourite/${item.id}`)
+        setFavouriteItems((prev) => prev.filter((obj) => Number(obj.id) !== Number(item.id)));
+      } else {
+        const response = await axios.post('https://62fe232b41165d66bfb9305a.mockapi.io/favourite', item )
+        const data = await response.data
+        setFavouriteItems((prev) => [...prev, data])
+      }
+    } catch (error) {
+      alert('Не удалось добавить в избранное!')
+    }
+  }
+
   return (
     <div className="wrapper">
-      <div className="drawer">
-        <div className="drawerContent">
-          <h2 className="text-2xl font-bold">Корзина</h2>
-          <div className="cartItems">
-            <div className="cartItem flex items-center mt-7">
-              <img className="mr-5" width={70} height={70} src="/img/items/first-item.jpeg" alt="Первый товар в корзине" />
-              <div className="mr-3">
-                <p className="text-sm">Мужская толстовка Nike Tech Fleece Hoodie</p>     
-                <b className="text-xs">14 999 руб.</b>        
-              </div>
-              <button>
-                <img width={61} height={61} src="/img/delete.svg" alt="Удалить товар из корзины" />
-              </button>
-            </div>
-          </div>
-          <div className="cartTotal">
-            <ul>
-              <li>
-                <span>Итого:</span>
-                <div></div>
-                <b>14 999 руб.</b>
-              </li>
-              <li>
-                <span>Налог 5%:</span>
-                <div></div>
-                <b>749 руб.</b>
-              </li>
-            </ul>
-            <button>
-              <span>Оформить заказ </span>
-              <img src="/img/next-page.svg" alt="Следующая страница" />
-            </button>
-          </div>
-        </div>
-      </div>
-      <header className="flex justify-between p-11">
-        <div className="flex items-center">
-          <img width={40} height={40} src="/img/logo.png" alt="Логотип"/>
-          <div className="ml-3">
-            <h3 className="text-xl font-bold uppercase leading-5">React Store</h3>
-            <p className="text-sm">Магазин реактивной одежды</p>
-          </div>
-        </div>
-        <ul className="flex">
-          <li className="flex items-center mr-7">
-            <img src="/img/shopping-cart.svg" alt="Корзина" />
-            <span className="ml-2">8799 руб.</span>
-          </li>
-          <li className="m-auto">
-            <img src="/img/user.svg" alt="Пользователь" />
-          </li>
-        </ul>
-      </header>
-      <div className="p-11">
-        <div className="flex mb-10 items-center justify-between">
-          <h1 className="text-3xl font-bold">Вся одежда</h1>
-          <div className="search flex">
-            <img src="/img/search.svg" alt="Поиск" />
-            <input type="text" placeholder="Поиск..." />
-          </div>
-        </div>
-        <div className="flex">
-          <div className="card">
-            <button>
-              <img width={20} height={20} src="/img/not-favourite.png" alt="Не добавлено в избранное" />
-            </button>
-            <img className="m-auto" width={133} height={112} src="/img/items/first-item.jpeg" alt="Товар" />
-            <p className="mt-3 text-sm">Мужская толстовка Nike Tech Fleece Hoodie</p>
-            <div className="flex justify-between items-center mt-3">
-              <div className="flex flex-col">
-                <span className="text-xs opacity-50">Цена:</span>
-                <b className="text-sm">14 999 руб.</b>
-              </div>
-              <button >
-                <img width={11} height={11} src="/img/plus.svg" alt="Плюс" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <img className="m-auto" width={133} height={112} src="/img/items/second-item.jpeg" alt="Товар" />
-            <p className="mt-3 text-sm">Мужская худи adidas Originals Adicolor Trefoil</p>
-            <div className="flex justify-between items-center mt-3">
-              <div className="flex flex-col">
-                <span className="text-xs opacity-50">Цена:</span>
-                <b className="text-sm">10 999 руб.</b>
-              </div>
-              <button >
-                <img width={11} height={11} src="/img/plus.svg" alt="Плюс" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <img className="m-auto" width={133} height={112} src="/img/items/third-item.jpeg" alt="Товар" />
-            <p className="mt-3 text-sm">Худи Champion Hooded Sweatshirt</p>
-            <div className="flex justify-between items-center mt-3">
-              <div className="flex flex-col">
-                <span className="text-xs opacity-50">Цена:</span>
-                <b className="text-sm">8 799 руб.</b>
-              </div>
-              <button >
-                <img width={11} height={11} src="/img/plus.svg" alt="Плюс" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <img className="m-auto" width={133} height={112} src="/img/items/fourth-item.jpeg" alt="Товар" />
-            <p className="mt-3 text-sm">Футболка Champion Crewneck T-Shirt</p>
-            <div className="flex justify-between items-center mt-3">
-              <div className="flex flex-col">
-                <span className="text-xs opacity-50">Цена:</span>
-                <b className="text-sm">3 999 руб.</b>
-              </div>
-              <button >
-                <img width={11} height={11} src="/img/plus.svg" alt="Плюс" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      {cartOpened && <Drawer items={cartItems} onRemove={removeFromCart} onCloseCart={() => setCartOpened(false)} /> }
+      <Header onClickCart={()=> setCartOpened(true)} />
+      <Routes>
+        <Route path="/" element={ <MainPage items={items} isLoaded={isLoading} cartItems={cartItems} searchedItem={searchedItem} setSearchedItem={setSearchedItem} addToFavourite={addToFavourite} addToCart={addToCart} /> }></Route>
+        <Route path="/favourite" element={<FavouritePage items={ favouriteItems } addToFavourite={addToFavourite} />}></Route>
+      </Routes>
     </div>
   );
 }

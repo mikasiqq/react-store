@@ -27,39 +27,6 @@ header {
     color: #5C5C5C;
   }
 }
-.card {
-  border: 1px solid #F8F8F8;
-  padding: 20px;
-  width: 220px;
-  border-radius: 40px;
-  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-  button {
-    border: 1px solid #F2F2F2;
-    border-radius: 8px;
-    width: 32px;
-    height: 32px;
-    img {
-      margin: 0 auto;
-    }
-  }
-  &:hover {
-    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.05);
-    transform: translateY(-5px);
-  }
-
-}
-.card + .card {
-  margin-left:40px
-}
-.search {
-  border: 1px solid #F3F3F3;
-  border-radius: 10px;
-  padding: 0 15px;
-  input {
-    padding: 12px;
-    font-size: 16px;
-  }
-}
 
 .drawer {
   position: absolute;
@@ -112,32 +79,59 @@ header {
     margin: 0 7px;
   }
   button {
-    background: #9DD558;
-    height: 50px;
-    width: 100%;
-    border-radius: 20px;
-    color: #FFFFFF;
-    font-size: 16px;
-    font-weight: 500;
-    position: relative;
-    display: flex;
-    align-items: center;
-    &:hover {
-      background: lighten($color: #9DD558, $amount: 5% );
-      img {
-        transform: translateX(5px);
-      }
-    }
-    &:active {
-      background: darken($color: #9DD558, $amount: 5% )
-    }
     img {
       position: absolute;
       right: 25px;
       transition: transform 0.15s ease-in-out;
     }
-    span {
-      margin: auto;
+    &:hover {
+      img {
+        transform: translateX(5px);
+      }
     }
-   }
+  }
+}
+.search {
+  border: 1px solid #F3F3F3;
+  border-radius: 10px;
+  padding: 0 15px;
+  input {
+    padding: 6px;
+    font-size: 16px;
+  }
+}
+.button_green {
+  background: #9DD558;
+  height: 50px;
+  width: 100%;
+  border-radius: 20px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background: lighten($color: #9DD558, $amount: 5% );
+  }
+  &:active {
+    background: darken($color: #9DD558, $amount: 5% )
+  }
+  span {
+    margin: auto;
+  }
+}
+.cartEmpty {
+  button {
+    img {
+      position: absolute;
+      left: 25px;
+      transition: transform 0.15s ease-in-out;
+    }
+    &:hover {
+      img {
+        transform: translateX(-5px);
+      }
+    }
+  }
 }
