@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import classes from './Card.module.scss'
+import AppContext from '../../context';
 
-const Card = ({title, imageUrl, price, onAddToCart, onAddToFavourite, isFavourite = false, isCart = false, isLoaded = false}) => {
-    const [isAddedToCart, setIsAddedToCart] = useState(isCart)
+const Card = ({id, title, imageUrl, price, onAddToCart, onAddToFavourite, isFavourite = false, isLoaded = false}) => {
+    const { isItemAdded } = React.useContext(AppContext)
     const [isAddedToFavourite, setIsAddedToFavourite] = useState(isFavourite)
+    const item = {id, itemId: id, title, imageUrl, price}
+
     const onClickPlus = () => {
-      setIsAddedToCart(!isAddedToCart)
-      onAddToCart()
+      onAddToCart(item)
     }
     const onClickFavourite = () => {
       setIsAddedToFavourite(!isAddedToFavourite)
-      onAddToFavourite()
+      onAddToFavourite(item)
     }
     return (
         <div className={classes.card}>
@@ -31,19 +33,19 @@ const Card = ({title, imageUrl, price, onAddToCart, onAddToFavourite, isFavourit
             </ContentLoader>
             :
             <>
-              <button onClick={onClickFavourite}>
+              {onAddToFavourite && <button onClick={onClickFavourite}>
                 <img width={20} height={20} src={isAddedToFavourite ? '/img/favourite.png' : '/img/not-favourite.png'} alt="Добавление в избранное" />
-              </button>
+              </button>}
               <img className="m-auto" width={133} height={112} src={imageUrl} alt="Товар" />
               <p className="mt-3 text-sm">{title}</p>
               <div className="flex justify-between items-center mt-3">
                 <div className="flex flex-col">
                   <span className="text-xs opacity-50">Цена:</span>
-                  <b className="text-sm">{price}</b>
+                  <b className="text-sm">{price} руб.</b>
                 </div>
-                <button onClick={onClickPlus}>
-                  <img width={32} height={32} src={isAddedToCart ? '/img/checkmark.png' : '/img/plus.svg'} alt="Добавление в корзину" />
-                </button>
+                {onAddToCart && <button onClick={onClickPlus}>
+                  <img width={32} height={32} src={isItemAdded(id ) ? '/img/checkmark.png' : '/img/plus.svg'} alt="Добавление в корзину" />
+                </button>}
               </div>
             </>
 

@@ -1,15 +1,17 @@
+import React from "react";
 import Card from "../components/Card/Card";
+// import AppContext from "../context";
 
-const MainPage = ({items, cartItems, searchedItem, setSearchedItem, addToFavourite, addToCart, isLoaded}) => {
+const MainPage = ({items, searchedItem, setSearchedItem, addToFavourite, addToCart, isLoaded}) => {
+  
   const renderItems = () => {
     const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchedItem.toLowerCase()))
     return (isLoaded ? [...Array(4)] : filteredItems)
     .map((item, index)=> (
       <Card 
         key={index}
-        onAddToFavourite={()=> addToFavourite(item)}
-        onAddToCart={() => addToCart(item)} 
-        isCart={cartItems.some(obj => Number(obj.id) === Number(item.id))} 
+        onAddToFavourite={(item)=> addToFavourite(item)}
+        onAddToCart={(item) => addToCart(item)} 
         isLoaded={isLoaded}
         {...item}
       />

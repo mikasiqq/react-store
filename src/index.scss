@@ -27,68 +27,49 @@ header {
     color: #5C5C5C;
   }
 }
-
-.drawer {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color:rgba(0, 0, 0, 0.35);
-  z-index: 1;
-}
-.drawerContent {
-  position: absolute;
-  width: 400px;
-  height: 100%;
-  right: 0;
-  background: #FFFFFF;
-  box-shadow: -10px 5px 25px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-}
-.cartItems {
-  flex: 1;
-  overflow: auto;
-}
 .cartItem {
   border-radius: 20px;
   border: 1px solid #F3F3F3;
   overflow: hidden;
   padding: 20px;
+
   button {
-    opacity: 0.5;
-    &:hover {
-      opacity: 1;
-    }
+      opacity: 0.5;
+
+      &:hover {
+          opacity: 1;
+      }
   }
 }
+
 .cartTotal {
   li {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 20px;
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 20px;
   }
+
   div {
-    flex: 1;
-    height: 1px;
-    border-bottom: 1px dashed #DFDFDF;
-    position: relative;
-    top: -5px;
-    margin: 0 7px;
+      flex: 1;
+      height: 1px;
+      border-bottom: 1px dashed #DFDFDF;
+      position: relative;
+      top: -5px;
+      margin: 0 7px;
   }
+
   button {
-    img {
-      position: absolute;
-      right: 25px;
-      transition: transform 0.15s ease-in-out;
-    }
-    &:hover {
       img {
-        transform: translateX(5px);
+          position: absolute;
+          right: 25px;
+          transition: transform 0.15s ease-in-out;
       }
-    }
+
+      &:hover {
+          img {
+              transform: translateX(5px);
+          }
+      }
   }
 }
 .search {
@@ -111,11 +92,20 @@ header {
   position: relative;
   display: flex;
   align-items: center;
+
+  &:disabled {
+    animation: button-loading 0.6s ease-in-out infinite;
+  }
+
   &:hover {
     background: lighten($color: #9DD558, $amount: 5% );
   }
   &:active {
     background: darken($color: #9DD558, $amount: 5% )
+  }
+  &:disabled {
+    background-color: #d8d8d8;
+    cursor: default;
   }
   span {
     margin: auto;
@@ -133,5 +123,16 @@ header {
         transform: translateX(-5px);
       }
     }
+  }
+}
+@keyframes button-loading {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
   }
 }
